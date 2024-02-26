@@ -22,15 +22,15 @@ def fairseq_pt_hf_ckpt(fairseq_pt: str):
     fairseq_dict = model.state_dict()  # Get the torchaudio dictionary
 
     print(f"Keys of the first dict: {fairseq_dict.keys()}")
-    # print(f"Some weights: {fairseq_dict['feature_extractor.conv_layers.0.layer_norm.weight']}")
+    print(f"Some weights: {fairseq_dict['feature_extractor.conv_layers.0.layer_norm.weight']}")
     hf_dict = map_fairseq_to_hf(fairseq_dict)
 
     print(f"Keys of the second dict: {hf_dict.keys()}")
-    # print(f"Some weights: {hf_dict['feature_extractor.conv_layers.0.layer_norm.weight']}")
+    print(f"Some weights: {hf_dict['feature_extractor.conv_layers.0.layer_norm.weight']}")
 
     torch.save(hf_dict, (os.path.splitext(fairseq_pt)[0]) + '_hf.ckpt')  # Save the new dictionary
 
-    print((os.path.splitext(fairseq_pt)[0]) + '.ckpt created !')
+    print((os.path.splitext(fairseq_pt)[0]) + '_hf.ckpt created !')
 
 
 def map_fairseq_to_hf(fairseq_dict: dict):
@@ -40,8 +40,8 @@ def map_fairseq_to_hf(fairseq_dict: dict):
     print(wav2vec2_map.keys())
     mapping = {
         'encoder.transformer.pos_conv_embed.conv.bias': 'encoder.pos_conv_embed.conv.bias',
-        'encoder.transformer.pos_conv_embed.conv.parametrizations.weight.original0': 'encoder.pos_conv_embed.conv.weight_g',
-        'encoder.transformer.pos_conv_embed.conv.parametrizations.weight.original1': 'encoder.pos_conv_embed.conv.weight_v',
+        'encoder.transformer.pos_conv_embed.conv.parametrizations.weight.original0': 'encoder.pos_conv_embed.conv.parametrizations.weight.original0',
+        'encoder.transformer.pos_conv_embed.conv.parametrizations.weight.original1': 'encoder.pos_conv_embed.conv.parametrizations.weight.original1',
         'encoder.transformer.layer_norm.weight': 'encoder.layer_norm.weight',
         'encoder.transformer.layer_norm.bias': 'encoder.layer_norm.bias'
     } # I'm not a fan of this being hard coded but I did not have a better idea
